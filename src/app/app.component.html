@@ -1,13 +1,23 @@
 <h2 class="title">TODO APP</h2>
 
 <div class="input-container">
-  <input #newNote class="note-input" placeholder="Enter your note here">
-  <button class="add-button" (click)="addNotes(newNote.value)">Add Note</button>
+  <input #newNote placeholder="Enter your note here" [(ngModel)]="newNoteDescription" class="note-input">
+  <input type="date" [(ngModel)]="newNoteDueDate" class="note-input">
+  <select [(ngModel)]="newNotePriority" class="note-input">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+  <button (click)="addNotes()" class="add-button">Add Note</button>
 </div>
 
 <div class="notes-container">
-  <div class="note-item" *ngFor="let note of notes">
+  <div class="note-item" *ngFor="let note of notes" [ngClass]="getPriorityClass(note.priority)">
     <b class="note-description">* {{note.description}}</b>
-    <button class="delete-button" (click)="deleteNotes(note.id)">Delete</button>
+    <div class="note-meta">
+      <span>Due: {{note.dueDate}}</span>
+      <span>Priority: {{note.priority}}</span>
+    </div>
+    <button (click)="deleteNotes(note.id)" class="delete-button">Delete</button>
   </div>
 </div>

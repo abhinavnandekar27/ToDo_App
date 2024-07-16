@@ -9,31 +9,56 @@ import { SharedService } from './shared.service';
 export class AppComponent {
   title = 'todo';
 
-  constructor(private service:SharedService){}
+  newNoteDescription: string = '';
+  newNoteDueDate: string = '';
+  newNotePriority: string = 'Low';
 
-  notes:any=[];
-  refreshNotes(){
-    this.service.getNotes().subscribe((res)=>{
-      this.notes=res;
+  constructor(private service: SharedService) { }
+
+  notes: any = [];
+
+  refreshNotes() {
+    this.service.getNotes().subscribe((res) => {
+      this.notes = res;
     })
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.refreshNotes();
   }
 
-  addNotes(newNotes:string){
-    this.service.addNotes(newNotes).then((res)=>{
+  addNotes() {
+    const newNote = {
+      description: this.newNoteDescription,
+      dueDate: this.newNoteDueDate,
+      priority: this.newNotePriority
+    };
+    this.service.addNotes(newNote).then((res) => {
+      console.log(res);
+      this.refreshNotes();
+      this.newNoteDescription = '';
+      this.newNoteDueDate = '';
+      this.newNotePriority = 'Low';
+    })
+  }
+
+  deleteNotes(id: string) {
+    this.service.deleteNotes(id).then((res) => {
       console.log(res);
       this.refreshNotes();
     })
   }
 
-  deleteNotes(id:string){
-    this.service.deleteNotes(id).then((res)=>{
-      console.log(res);
-      this.refreshNotes();
-    })
+  getPriorityClass(priority: string): string {
+    switch (priority) {
+      case 'Low':
+        return 'priority-low';
+      case 'Medium':
+        return 'priority-medium';
+      case 'High':
+        return 'priority-high';
+      default:
+        return '';
+    }
   }
-
 }
